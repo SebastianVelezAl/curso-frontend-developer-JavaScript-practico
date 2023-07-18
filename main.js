@@ -48,7 +48,4 @@ function toggleCarritoAside(){
         desktopMenu.classList.add('inactive');
     }
     aside.classList.toggle('inactive');
-
-
-
 }
