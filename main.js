@@ -9,6 +9,14 @@ const cardContainer =document.querySelector('.cards-container');
 const productDetalleClose = document.querySelector('.product-detail-close');
 const productDetalleContainer = document.querySelector('.product-detail-secondary');
 
+const imgDetailAside = document.querySelector('#imgDetailAside');
+
+const productInfo = document.querySelector(".product-info");
+const productInfoParrafos = productInfo.querySelectorAll('p');
+
+
+
+
 menuEmail.addEventListener('click', toggleDesktopMenu);
 menuHamburguesa.addEventListener('click',toggleMobileMenu);
 menuCarrito.addEventListener('click', toggleCarritoAside);
@@ -59,41 +67,44 @@ function toggleCarritoAside(){
     aside.classList.toggle('inactive');
 }
 
-function openProductDetailAside(){
+function openProductDetailAside(img, productPrice, productName, description) {
+    imgDetailAside.src=img.src;
+    productInfoParrafos[0].textContent = '$'+productPrice;
+    productInfoParrafos[1].textContent = productName.textContent;
+    productInfoParrafos[2].textContent = description;
 
-    console.log('click abrir producto');
-    const isAsideClosed =aside.classList.contains('inactive');
-
-    if(!isAsideClosed){
-        aside.classList.toggle('inactive');
-    }
+    aside.classList.add('inactive');
     productDetalleContainer.classList.remove('inactive');
 
 }
+
+
 
 function toggleProductDetailClose(){
     productDetalleContainer.classList.toggle('inactive');
     console.log('clik cerrar detalle producto');
     
 }
+const productList = [];
+productList.push ({
+    name:'Bike',
+    price: 12700,
+    image: 'https://images.pexels.com/photos/276517/pexels-photo-276517.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
+    description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio doloremque natus quo est nulla? Mollitia debitis quo tempore velit, iste ullam',
+});
+productList.push ({
+    name:'Bicycle helmet',
+    price: 1200,
+    image: 'https://assets.specialized.com/i/specialized/60821-104_HLMT_ALIGN-II-HLMT-MIPS-CE-BLK-BLKREFL-S-M_HERO?bg=rgb(241,241,241)&w=1600&h=900&fmt=auto',
+    description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio doloremque natus quo est nulla? Mollitia debitis quo tempore velit, iste ullam',
+});
+productList.push ({
+    name:'Bicycle helmet',
+    price: 1600,
+    image: 'https://m.media-amazon.com/images/I/61eExL-rIAL._AC_SL1001_.jpg',
+    description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio doloremque natus quo est nulla? Mollitia debitis quo tempore velit, iste ullam',
+});
 
-
-const productList =[];
-productList.push({
-    name: 'Bike',
-    price: 120,
-    imagen:'https://images.pexels.com/photos/276517/pexels-photo-276517.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
-});
-productList.push({
-    name: 'Casco',
-    price: 50,
-    imagen:'https://images.pexels.com/photos/276517/pexels-photo-276517.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
-});
-productList.push({
-    name: 'guarntes',
-    price: 10,
-    imagen:'https://images.pexels.com/photos/276517/pexels-photo-276517.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
-});
 
 
   
@@ -114,41 +125,48 @@ productList.push({
 //listar los productos a comprar
 function renderProducts (arr){
     for(product of arr){
-        const productCard=document.createElement('div');
+        const description = product.description;
+        const productPriceClean = product.price;
+
+        const productCard = document.createElement('div');
         productCard.classList.add('product-card');
     
-        //product = {name,price,imag}
-        const producImg = document.createElement('img');
-        producImg.setAttribute('src',product.imagen);
-        producImg.addEventListener('click',openProductDetailAside)
-    
-        const productInfo=document.createElement('div');
+        const img = document.createElement('img');
+        img.src=product.image;
+        
+        const productInfo = document.createElement('div');
         productInfo.classList.add('product-info');
     
-        const productInfoDiv=document.createElement('div');
+        const productDiv = document.createElement('div');
     
-        const productPrice=document.createElement('p');
-        productPrice.innerText='$'+product.price;
-        const productName=document.createElement('p');
-        productName.innerText=product.name;
+        const productPrice = document.createElement('p');
+        productPrice.innerText = '$' + product.price;
     
-        productInfoDiv.appendChild(productPrice);
-        productInfoDiv.appendChild(productName);
+        const productName = document.createElement('p');
+        productName.innerText = product.name;
     
-        const productInfoFigure=document.createElement('figure');
-        const productImgCart=document.createElement('img'); 
-        productImgCart.setAttribute('src','./icons/bt_add_to_cart.svg');
+        const productInfoFigure = document.createElement('figure');
+        const productInfoImg = document.createElement('img');
+        productInfoImg.setAttribute('src', './icons/bt_add_to_cart.svg');
+
+        productInfoImg.addEventListener('click', () => {
+            addToCart(img, productName, productPriceClean);
+        });
+
+        img.addEventListener('click', () => {
+            openProductDetailAside(img, productPriceClean, productName, description);
+        });
     
-        productInfoFigure.appendChild(productImgCart);
+        productInfoFigure.append(productInfoImg);
+        productDiv.append(productPrice, productName);
     
-        productInfo.appendChild(productInfoDiv);
-        productInfo.appendChild(productInfoFigure);
+        productInfo.append(productDiv,productInfoFigure);
     
-        productCard.appendChild(producImg);
-        productCard.appendChild(productInfo);
+        productCard.append(img, productInfo);
     
-        cardContainer.appendChild(productCard);
-    
+        cardContainer.append(productCard);
+
+        
     }
     
 }
